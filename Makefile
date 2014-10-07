@@ -15,13 +15,18 @@ ADD_FILES 						 = $(wildcard *.py)
 
 DNS_SERVERS 					?= 
 
+AWS_ACCESS_KEY_ID 		?= 'AKOQPRSMRE237EXAMPLE'
+AWS_SECRET_ACCESS_KEY  	?= 'wJaioWlr2JRat/K7MDENG/bPxRfiCYEXAMPLEKEY'
+
 DOCKER 								?= docker
 DOCKER_DAEMON_FLAGS 	?= 
 # needed to get container's clock to sync host's
 DOCKER_TIME_FLAGS 		 = -v /etc/localtime:/etc/localtime:ro
 DOCKER_DNS_FLAGS 			?= $(patsubst %,--dns=%,$(DNS_SERVERS))
 DOCKER_MOUNT_FLAGS 		?= 
-DOCKER_RUN_FLAGS 			?= $(DOCKER_DNS_FLAGS) $(DOCKER_TIME_FLAGS) $(DOCKER_MOUNT_FLAGS)
+DOCKER_ENV_FLAGS       = --env "AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)" --env "AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)"
+DOCKER_RUN_FLAGS 			?= $(DOCKER_DNS_FLAGS) $(DOCKER_TIME_FLAGS) $(DOCKER_MOUNT_FLAGS) $(DOCKER_ENV_FLAGS)
+
 DOCKER_BUILD_FLAGS 		?= --rm
 
 ###############################
@@ -106,11 +111,6 @@ rm : $(BASENAME).rm
 	$(DOCKER) stop `cat $<`
 	$(DOCKER) rm `cat $<`
 	rm $<
-
-suggestions :
-	@echo make img
-	@echo make cid
-	@echo make run
 
 clean :
 	-rm *.img
