@@ -20,15 +20,12 @@ MAINTAINER Steven E. Pav, steven@cerebellumcapital.com
 
 #####################################################
 # setup# FOLDUP
-RUN (pip install -q --upgrade pip ; \
-	pip install -q boto ; \
-	mkdir -p /opt/boto/bin )
-
 ENV AWS_ACCESS_KEY_ID AKOQPRSMRE237EXAMPLE
 ENV AWS_SECRET_ACCESS_KEY wJaioWlr2JRat/K7MDENG/bPxRfiCYEXAMPLEKEY
 
 ENV AWS_REGION us-west-1
 
+RUN (mkdir -p /opt/boto/bin)
 ADD bin/ /opt/boto/bin/
 # UNFOLD
 
