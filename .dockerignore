@@ -1,0 +1,8 @@
+Makefile
+*.pyc
+*.rst
+_build
+_static
+_templates
+.git
+.gitignore
