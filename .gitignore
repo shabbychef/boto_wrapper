@@ -35,3 +35,7 @@ pip-delete-this-directory.txt
 # docker
 boto.img
 boto.cid
+
+# prop
+cci_*.sh
+output/
