@@ -50,7 +50,7 @@ retrieve_all : $(BASENAME).img
 	mkdir ./output
 	$(DOCKER) $(DOCKER_DAEMON_FLAGS) run \
 		$(DOCKER_RUN_FLAGS) \
-		-v ./output:/tmp/output:rw \
+		-v $(PWD)/output:/tmp/output:rw \
 		-t -i --rm \
 		--entrypoint="/opt/boto/bin/retrieve_all.py" $(USERNAME)/$(BASENAME) \
 		"--directory" "/tmp/output" "$(VAULT_NAME)"
