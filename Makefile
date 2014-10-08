@@ -17,6 +17,8 @@ DNS_SERVERS 					?=
 
 AWS_ACCESS_KEY_ID 		?= 'AKOQPRSMRE237EXAMPLE'
 AWS_SECRET_ACCESS_KEY  	?= 'wJaioWlr2JRat/K7MDENG/bPxRfiCYEXAMPLEKEY'
+AWS_REGION 						?= 'us-east-1'
+VAULT_NAME 						?= backupd
 
 DOCKER 								?= docker
 DOCKER_DAEMON_FLAGS 	?= 
@@ -24,7 +26,9 @@ DOCKER_DAEMON_FLAGS 	?=
 DOCKER_TIME_FLAGS 		 = -v /etc/localtime:/etc/localtime:ro
 DOCKER_DNS_FLAGS 			?= $(patsubst %,--dns=%,$(DNS_SERVERS))
 DOCKER_MOUNT_FLAGS 		?= 
-DOCKER_ENV_FLAGS       = --env "AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)" --env "AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)"
+DOCKER_ENV_FLAGS       = --env "AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID)" 
+DOCKER_ENV_FLAGS      += --env "AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)"
+DOCKER_ENV_FLAGS      += --env "AWS_REGION=$(AWS_REGION)"
 DOCKER_RUN_FLAGS 			?= $(DOCKER_DNS_FLAGS) $(DOCKER_TIME_FLAGS) $(DOCKER_MOUNT_FLAGS) $(DOCKER_ENV_FLAGS)
 
 DOCKER_BUILD_FLAGS 		?= --rm
@@ -41,6 +45,15 @@ list_vaults : $(BASENAME).img
 		$(DOCKER_RUN_FLAGS) \
 		-t -i --rm \
 		--entrypoint="/opt/boto/bin/list_vaults.py" $(USERNAME)/$(BASENAME)
+
+retrieve_all : $(BASENAME).img
+	mkdir ./output
+	$(DOCKER) $(DOCKER_DAEMON_FLAGS) run \
+		$(DOCKER_RUN_FLAGS) \
+		-v ./output:/tmp/output:rw \
+		-t -i --rm \
+		--entrypoint="/opt/boto/bin/retrieve_all.py" $(USERNAME)/$(BASENAME) \
+		"--directory" "/tmp/output" "$(VAULT_NAME)"
 
 all: img
 
